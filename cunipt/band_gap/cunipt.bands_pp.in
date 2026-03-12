@@ -1,0 +1,5 @@
+&bands
+prefix = 'cunipt',
+outdir = './',
+filband = 'band.dat'
+/

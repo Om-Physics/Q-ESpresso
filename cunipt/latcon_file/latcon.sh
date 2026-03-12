@@ -1,0 +1,52 @@
+#!/bin/sh
+
+NAME="lc"
+ 
+for latcon in  11 11.1 11.2 11.3 11.4 11.5 11.6 11.7 11.8 11.9 12
+do
+cat > ${NAME}_${latcon}.in << EOF
+&control
+    calculation = 'scf'
+    prefix = 'cunipt'
+    pseudo_dir = './.'
+    outdir = './.'
+/
+
+&system
+    ibrav = 2,
+    celldm(1) = $latcon,
+    nat = 3,
+    ntyp = 3,
+    ecutwfc = 60,
+    ecutrho = 240,
+    nbnd = 28,
+    occupations = 'smearing'
+    smearing = 'gaussian',
+    degauss = 0.01
+/
+
+&electrons
+    mixing_beta = 0.7
+    conv_thr = 1.0d-7
+    
+/
+ATOMIC_SPECIES
+ Cu 63.546 Cu.upf
+ Ni 58.693 Ni.upf
+ Pt 195.08 Pt.upf
+
+ATOMIC_POSITIONS {alat}
+ Cu 0.0 0.0 0.0
+ Ni 0.5 0.5 0.5
+ Pt 0.25 0.25 0.25
+
+K_POINTS (automatic) 
+10 10 10 0 0 0 
+EOF
+
+pw.x < ${NAME}_${latcon}.in> ${NAME}_${latcon}.out
+echo ${NAME}_${latcon}.out
+grep ! ${NAME}_${latcon}.out
+done
+
+ awk '/lattice*/{lc=$5}/^!.*total/{print lc, $5}' *out > etot_v_latcon.dat

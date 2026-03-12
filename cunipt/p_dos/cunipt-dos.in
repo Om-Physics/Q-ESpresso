@@ -1,0 +1,9 @@
+&DOS
+   prefix = 'cunipt'
+   outdir = './.'
+   fildos = 'cunipt_dos.dat'
+   emin = -9.0
+   emax = 16.0
+
+/
+
